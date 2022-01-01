@@ -2,27 +2,39 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-
 import sys
 
-# 1. Import `QApplication` and all the required widgets
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QLabel
-from PyQt5.QtWidgets import QWidget
+from PyQt5.uic import loadUi
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QDialog, QApplication, QWidget
+from PyQt5.QtGui import QPixmap
 
-# 2. Create an instance of QApplication
+class AnalysisWindow(QDialog):
+    def __init__(self):
+        super(AnalysisWindow, self).__init__()
+        loadUi("Analysis.ui",self)
+        # self.analysisBtn.clicked.connect(self.showAnalysisWindow)
+
+class PredictionWindow(QDialog):
+    def __init__(self):
+        super(PredictionWindow, self).__init__()
+        loadUi("Analysis.ui",self)
+        # self.analysisBtn.clicked.connect(self.showAnalysisWindow)
+
+class EditWindow(QDialog):
+    def __init__(self):
+        super(EditWindow, self).__init__()
+        loadUi("Analysis.ui",self)
+        # self.analysisBtn.clicked.connect(self.showAnalysisWindow)
+
+# main
 app = QApplication(sys.argv)
-
-# 3. Create an instance of your application's GUI
-window = QWidget()
-window.setWindowTitle('PyQt5 App')
-window.setGeometry(100, 100, 280, 80)
-window.move(60, 15)
-helloMsg = QLabel('<h1>Hello World!</h1>', parent=window)
-helloMsg.move(60, 15)
-
-# 4. Show your application's GUI
-window.show()
-
-# 5. Run your application's event loop (or main loop)
-sys.exit(app.exec_())
+widget = QtWidgets.QStackedWidget()
+widget.addWidget(AnalysisWindow())
+widget.setFixedHeight(441)
+widget.setFixedWidth(621)
+widget.show()
+try:
+    sys.exit(app.exec_())
+except:
+    print("Exiting")
