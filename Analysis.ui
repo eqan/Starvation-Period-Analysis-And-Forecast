@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>625</width>
-    <height>437</height>
+    <width>935</width>
+    <height>566</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Starvation Period Analysis &amp; Prediction</string>
@@ -16,19 +22,19 @@
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>-1</x>
-     <y>-1</y>
-     <width>621</width>
-     <height>441</height>
+     <x>0</x>
+     <y>-10</y>
+     <width>941</width>
+     <height>571</height>
     </rect>
    </property>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
+      <x>10</x>
+      <y>10</y>
       <width>77</width>
-      <height>431</height>
+      <height>561</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -73,17 +79,64 @@
      </item>
     </layout>
    </widget>
-   <widget class="QStackedWidget" name="stackedWidget">
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>20</y>
+      <width>281</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>Analysis for consumption, production and starvation</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Analysis for imports, exports and starvation</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Analysis for starvation &amp; unemployment</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Analysis for starvation &amp; inflation</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Analysis for starvation &amp; poverty</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QPushButton" name="displayBtn">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>20</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Display</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>10</y>
-      <width>521</width>
-      <height>421</height>
+      <y>60</y>
+      <width>841</width>
+      <height>511</height>
      </rect>
     </property>
-    <widget class="QWidget" name="page"/>
-    <widget class="QWidget" name="page_2"/>
+    <layout class="QVBoxLayout" name="contentArea"/>
    </widget>
   </widget>
  </widget>
