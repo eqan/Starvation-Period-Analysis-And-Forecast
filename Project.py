@@ -26,8 +26,8 @@ r = np.arange(n)
 width = 0.2
 
 def clearContentArea(layout):
-        for i in reversed(range(layout.count())): 
-                layout.itemAt(i).widget().setParent(None)
+    for i in reversed(range(layout.count())): 
+        layout.itemAt(i).widget().setParent(None)
 
 # Analysis Related Functionalities
 ## Start
@@ -123,49 +123,7 @@ class analysisForPovertyAndStarvation(FigureCanvas):
 
 ## End
 
-# Main View also analysis view
-class AnalysisWindow(QDialog):
-    def __init__(self):
-        super(AnalysisWindow, self).__init__()
-        loadUi("Analysis.ui",self)
-        self.switchToAnalysisView()
-        self.predictionBtn.clicked.connect(self.switchToPredictionView)
-        self.editBtn.clicked.connect(self.switchToEditView)
-
-    def switchToAnalysisView(self):
-        self.displayBtn.clicked.connect(self.displayAnalysisGraph)
-        self.addOptionsForAnalysis()
-
-    def switchToPredictionView(self):
-        print("Currently in prediciton view")
-        widget.setCurrentIndex(widget.currentIndex()+1)
-
-    def switchToEditView(self):
-        print("Currently in edit view")
-        widget.setCurrentIndex(widget.currentIndex()+2)
-
-    def addOptionsForAnalysis(self):
-            self.comboBox.clear()
-            self.comboBox.addItem("Analysis for consumption, production and starvation")
-            self.comboBox.addItem("Analysis for imports, exports and starvation")
-            self.comboBox.addItem("Analysis for starvation & unemployment")
-            self.comboBox.addItem("Analysis for starvation & inflation")
-            self.comboBox.addItem("Analysis for starvation & poverty")
-
-    def displayAnalysisGraph(self):
-        option = self.comboBox.currentText()
-        clearContentArea(self.contentArea)
-        if(option == "Analysis for consumption, production and starvation"):
-                self.contentArea.addWidget(analysisForConsumptionProductionAndStarvation(self))
-        elif(option == "Analysis for imports, exports and starvation"):
-                self.contentArea.addWidget(analysisForImportsExportsAndStarvation(self))
-        elif(option == "Analysis for starvation & unemployment"):
-                self.contentArea.addWidget(analysisForUnemploymentAndStarvation(self))
-        elif(option == "Analysis for starvation & inflation"):
-                self.contentArea.addWidget(analysisForInflationAndStarvation(self))
-        elif(option == "Analysis for starvation & poverty"):
-                self.contentArea.addWidget(analysisForPovertyAndStarvation(self))
-
+## Data Table Start
 class MyTable(QTableWidget):
     fileName = ''
     def __init__(self, r, c, fileName):
@@ -220,15 +178,72 @@ class MyTable(QTableWidget):
                         else:
                             row_data.append('')
                     writer.writerow(row_data)
+## Data Table End
+
+# Main View also analysis view
+class AnalysisWindow(QDialog):
+    def __init__(self):
+        super(AnalysisWindow, self).__init__()
+        loadUi("Analysis.ui",self)
+        self.switchToAnalysisView()
+        self.predictionBtn.clicked.connect(self.switchToPredictionView)
+        self.editBtn.clicked.connect(self.switchToEditView)
+
+    def switchToAnalysisView(self):
+        self.displayBtn.clicked.connect(self.displayAnalysisGraph)
+        self.addOptionsForAnalysis()
+
+    def switchToPredictionView(self):
+        print("Currently in prediciton view")
+        widget.setCurrentIndex(1)
+
+    def switchToEditView(self):
+        print("Currently in edit view")
+        widget.setCurrentIndex(2)
+
+    def addOptionsForAnalysis(self):
+            self.comboBox.clear()
+            self.comboBox.addItem("Analysis for consumption, production and starvation")
+            self.comboBox.addItem("Analysis for imports, exports and starvation")
+            self.comboBox.addItem("Analysis for starvation & unemployment")
+            self.comboBox.addItem("Analysis for starvation & inflation")
+            self.comboBox.addItem("Analysis for starvation & poverty")
+
+    def displayAnalysisGraph(self):
+        option = self.comboBox.currentText()
+        clearContentArea(self.contentArea)
+        if(option == "Analysis for consumption, production and starvation"):
+                self.contentArea.addWidget(analysisForConsumptionProductionAndStarvation(self))
+        elif(option == "Analysis for imports, exports and starvation"):
+                self.contentArea.addWidget(analysisForImportsExportsAndStarvation(self))
+        elif(option == "Analysis for starvation & unemployment"):
+                self.contentArea.addWidget(analysisForUnemploymentAndStarvation(self))
+        elif(option == "Analysis for starvation & inflation"):
+                self.contentArea.addWidget(analysisForInflationAndStarvation(self))
+        elif(option == "Analysis for starvation & poverty"):
+                self.contentArea.addWidget(analysisForPovertyAndStarvation(self))
 
         
 class EditWindow(QDialog):
     def __init__(self):
         super(EditWindow, self).__init__()
         loadUi("Analysis.ui",self)
+        self.switchToEditView()
+        self.displayBtn.clicked.connect(self.displayTable)
+        self.analysisBtn.clicked.connect(self.switchToAnalysisView)
+        self.predictionBtn.clicked.connect(self.switchToPredictionView)
+
+    def switchToAnalysisView(self):
+        print("Currently in analysis view")
+        widget.setCurrentIndex(0)
+
+    def switchToPredictionView(self):
+        print("Currently in prediciton view")
+        widget.setCurrentIndex(1)
+
+    def switchToEditView(self):
         self.addOptionsForEdit()
         self.initializeSetup("Project-Dataset.csv")
-        self.displayBtn.clicked.connect(self.displayTable)
 
     def displayTable(self):
         clearContentArea(self.contentArea)

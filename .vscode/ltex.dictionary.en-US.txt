@@ -2,3 +2,5 @@ Mundi
 Mundi
 Numpy
 Seaborn
+intellisense
+Scipy
