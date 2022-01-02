@@ -39,7 +39,7 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QPushButton" name="c">
+      <widget class="QPushButton" name="analysisBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -82,37 +82,12 @@
    <widget class="QComboBox" name="comboBox">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>270</x>
       <y>20</y>
-      <width>281</width>
+      <width>381</width>
       <height>31</height>
      </rect>
     </property>
-    <item>
-     <property name="text">
-      <string>Analysis for consumption, production and starvation</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Analysis for imports, exports and starvation</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Analysis for starvation &amp; unemployment</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Analysis for starvation &amp; inflation</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Analysis for starvation &amp; poverty</string>
-     </property>
-    </item>
    </widget>
    <widget class="QPushButton" name="displayBtn">
     <property name="geometry">
