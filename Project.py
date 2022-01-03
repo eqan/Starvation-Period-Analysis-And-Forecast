@@ -3,15 +3,19 @@ import numpy as np
 import seaborn as sns
 import os
 import csv
+import sys
+from scipy import stats
+from prophet import Prophet
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QTableWidget,  QTableWidgetItem, qApp, QAction, QShortcut
+from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QTableWidget,  QTableWidgetItem, qApp, QAction, QShortcut,  QMessageBox
 from PyQt5.QtGui import QPixmap, QKeySequence
-import sys
+from sklearn import linear_model
+from sklearn.metrics import r2_score
 
 
 # Data Variables
@@ -123,6 +127,74 @@ class analysisForPovertyAndStarvation(FigureCanvas):
 
 ## End
 
+## Prediction Related Functionalities Start
+class predictionForStarvationUsingLinearRegression(FigureCanvas):
+    def __init__(self, parent):
+        fig, self.ax = plt.subplots(figsize=(1000, 100), dpi=95)
+        super().__init__(fig)
+        self.setParent(parent)
+        """ 
+        Matplotlib Script
+        """
+        x = dataWhole['Hunger Annual Change']
+        y = dataWhole['Year']
+        slope, intercept, r, p, std_err = stats.linregress(x, y)
+        if(int(r) == 0):
+            QMessageBox.about(self, "Prediction Wizzard", "Seems like there is no relationship!")
+        else:
+            QMessageBox.about(self, "Prediction Wizzard", 'The predicted starvation change is:'+ str(r))
+
+        def predictFutureValue(x):
+            return slope * x + intercept
+
+        model = list(map(predictFutureValue, x))
+
+        print('The r values is:', r)
+
+        self.ax.scatter(x, y)
+        self.ax.plot(x, model)
+        self.ax.set(xlabel="Year", ylabel="Annual Starvation Change", title="Prediction Of Starvation Against Year")
+
+class predictionForStarvationUsingPolynomialRegression(FigureCanvas):
+    def __init__(self, parent):
+        fig, self.ax = plt.subplots(figsize=(1000, 100), dpi=95)
+        super().__init__(fig)
+        self.setParent(parent)
+        """ 
+        Matplotlib Script
+        """
+        x = dataWhole['Hunger Annual Change']
+        y = dataWhole['Year']
+        # Predict futre values using the model
+        model = np.poly1d(np.polyfit(x, y, 3))
+        line = np.linspace(-0.4, 0.4, 20)
+        self.ax.scatter(x, y)
+        self.ax.plot(line, model(line))
+        r=r2_score(y, model(x))
+        print("R-Squared Value: ", r)
+        if(int(r) == 0):
+            QMessageBox.about(self, "Prediction Wizzard", "Seems like there is no relationship!")
+        else:
+            QMessageBox.about(self, "Prediction Wizzard", 'The predicted starvation change is:'+ str(r))
+        self.ax.set(xlabel="Year", ylabel="Annual Starvation Change", title="Prediction Of Starvation Against Year")
+
+class predictionForStarvationUsingMultipleLinearRegression(FigureCanvas):
+    def __init__(self, parent):
+        fig, self.ax = plt.subplots(figsize=(1000, 100), dpi=95)
+        super().__init__(fig)
+        self.setParent(parent)
+        """ 
+        Matplotlib Script
+        """
+        X = dataWhole[['Inflation Annual Change', 'Economic Annual Change', 'Population Growth Rate', 'Poverty Annual Change', 'Unemployment Per Year']]
+        y = dataWhole['Hunger Annual Change']
+        regr = linear_model.LinearRegression()
+        regr.fit(X, y)
+        predictedStarvation = regr.predict([[0.12, 0.1,0.21, 0.21,0.1]])
+        print('The predicted starvation change is:', predictedStarvation)
+        QMessageBox.about(self, "Prediction Wizzard", 'The predicted starvation change is: '+ str(predictedStarvation))
+## End
+
 ## Data Table Start
 class MyTable(QTableWidget):
     fileName = ''
@@ -223,7 +295,7 @@ class AnalysisWindow(QDialog):
         elif(option == "Analysis for starvation & poverty"):
                 self.contentArea.addWidget(analysisForPovertyAndStarvation(self))
 
-        
+# Edit Window 
 class EditWindow(QDialog):
     def __init__(self):
         super(EditWindow, self).__init__()
@@ -261,7 +333,6 @@ class EditWindow(QDialog):
         col_headers = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
         self.form_widget.setHorizontalHeaderLabels(col_headers)
         # Set up menu
-        #save_action.triggered.connect(self.form_widget.save_sheet)
         self.shortcut = QShortcut(QKeySequence('Ctrl+S'), self)
         self.shortcut.activated.connect(self.form_widget.save)
         self.show()
@@ -269,11 +340,44 @@ class EditWindow(QDialog):
     def quit_app(self):
         qApp.quit()
 
-
+# Prediction Window
 class PredictionWindow(QDialog):
     def __init__(self):
         super(PredictionWindow, self).__init__()
         loadUi("Analysis.ui",self)
+        self.switchToPredictionView()
+        self.analysisBtn.clicked.connect(self.switchToAnalysisView)
+        self.editBtn.clicked.connect(self.switchToEditView)
+
+    def switchToAnalysisView(self):
+        print("Currently in analysis view")
+        widget.setCurrentIndex(0)
+
+    def switchToPredictionView(self):
+        self.displayBtn.clicked.connect(self.displayPredictionGraph)
+        self.addOptionsForPrediction()
+        # self.initializeSetup("Project-Dataset.csv")
+
+    def switchToEditView(self):
+        print("Currently in edit view")
+        widget.setCurrentIndex(2)
+
+    def addOptionsForPrediction(self):
+        self.comboBox.clear()
+        self.comboBox.addItem("Linear Regression On Starvation With Year")
+        self.comboBox.addItem("Polynomial Regression On Starvation With Year")
+        self.comboBox.addItem("Multiple Linear Regression")
+
+    def displayPredictionGraph(self):
+        option = self.comboBox.currentText()
+        clearContentArea(self.contentArea)
+        if(option == "Linear Regression On Starvation With Year"):
+            self.contentArea.addWidget(predictionForStarvationUsingLinearRegression(self))
+        elif(option == "Polynomial Regression On Starvation With Year"):
+            self.contentArea.addWidget(predictionForStarvationUsingPolynomialRegression(self))
+        elif(option == "Multiple Linear Regression"):
+            self.contentArea.addWidget(predictionForStarvationUsingMultipleLinearRegression(self))
+
 # main
 app = QApplication(sys.argv)
 widget = QtWidgets.QStackedWidget()
